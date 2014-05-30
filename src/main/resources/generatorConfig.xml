@@ -14,8 +14,8 @@
 		</commentGenerator>
 
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://192.168.86.213:3306/gmsales?generateSimpleParameterMetadata=true"
-			userId="gmsales" password="gmsales">
+			connectionURL="jdbc:mysql://127.0.0.1:3306/gmsales?generateSimpleParameterMetadata=true"
+			userId="username" password="password">
 		</jdbcConnection>
 
 		<javaTypeResolver>

@@ -7,10 +7,9 @@ import java.util.Properties;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -24,6 +23,9 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.yejq.common.BaseQuery;
 
@@ -36,7 +38,7 @@ import com.yejq.common.BaseQuery;
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class,
 		Object.class, RowBounds.class, ResultHandler.class }) })
 public class CacheInterceptor implements Interceptor {
-	private static final Log logger = LogFactory.getLog(CacheInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(CacheInterceptor.class);
 	private static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
 	private static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
 	private static String defaultPageSqlId = ".*Page$"; // 需要拦截的ID(正则匹配)
@@ -86,11 +88,31 @@ public class CacheInterceptor implements Interceptor {
 		cacheKey.update(ms.getId());
 		cacheKey.update(rowBounds.getOffset());
 		cacheKey.update(rowBounds.getLimit());
+		cacheKey.update(boundSql.getSql());
+		
+		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+		MetaObject metaObject = MetaObject.forObject(parameterObject, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY);
+
+        if (parameterMappings.size() > 0 && parameterObject != null) {
+            TypeHandlerRegistry typeHandlerRegistry = ms.getConfiguration().getTypeHandlerRegistry();
+            if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+                cacheKey.update(parameterObject);
+            } else {
+                for (ParameterMapping parameterMapping : parameterMappings) {
+                    String propertyName = parameterMapping.getProperty();
+                    if (metaObject.hasGetter(propertyName)) {
+                        cacheKey.update(metaObject.getValue(propertyName));
+                    } else if (boundSql.hasAdditionalParameter(propertyName)) {
+                        cacheKey.update(boundSql.getAdditionalParameter(propertyName));
+                    }
+                }
+            }
+        }
 
 		// 当需要分页查询时，将page参数里的当前页和每页数加到cachekey里
-		if (ms.getId().matches(pageSqlId) && parameterObject instanceof BaseQuery) {
-			BaseQuery page = (BaseQuery) parameterObject;
-			if (null != page) {
+		if (ms.getId().matches(pageSqlId)) {
+			BaseQuery page = PageInterceptor.getBaseQuery(parameterObject);
+			if (page != null) {
 				cacheKey.update(page.getOriginalPageIndex());
 				cacheKey.update(page.getPageSize());
 			}

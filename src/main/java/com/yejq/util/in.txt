@@ -1,0 +1,16 @@
+CREATE TABLE `order_payment_refund` (
+  `id` int(10) unsigned NOT NULL DEFAULT '0',
+  `finance_refund_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '退款申请id',
+  `order_payment_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'payment id',
+  `transaction_number` varchar(70) NOT NULL DEFAULT '' COMMENT '交易号',
+  `success` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否成功 0-否 1-是',
+  `currency` varchar(64) NOT NULL DEFAULT '' COMMENT '币种',
+  `currency_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '币种id',
+  `amount` decimal(12,4) NOT NULL DEFAULT '0.0000' COMMENT '金额',
+  `remark` varchar(256) NOT NULL COMMENT '备注',
+  `last_update_by` varchar(64) NOT NULL DEFAULT '' COMMENT '最后修改人',
+  `create_by` varchar(64) NOT NULL DEFAULT '' COMMENT '创建人',
+  `create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `last_update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单退款 关联表\n 一个退款 对应 多笔支付\n一笔支付 对应多个退款\n总之 多对多'

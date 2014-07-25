@@ -1,0 +1,45 @@
+(finance_refund_id, order_payment_id, transaction_number, success, currency, currency_id, amount, remark, last_update_by, create_by, create_time)
+			<choose>
+				<when test="item.financeRefundId == null">0,</when>
+				<otherwise>#{item.financeRefundId},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.orderPaymentId == null">0,</when>
+				<otherwise>#{item.orderPaymentId},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.transactionNumber == null">'',</when>
+				<otherwise>#{item.transactionNumber},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.success == null">0,</when>
+				<otherwise>#{item.success},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.currency == null">'',</when>
+				<otherwise>#{item.currency},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.currencyId == null">0,</when>
+				<otherwise>#{item.currencyId},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.amount == null">0.0000,</when>
+				<otherwise>#{item.amount},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.remark == null">'',</when>
+				<otherwise>#{item.remark},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.lastUpdateBy == null">'',</when>
+				<otherwise>#{item.lastUpdateBy},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.createBy == null">'',</when>
+				<otherwise>#{item.createBy},</otherwise>
+			</choose>
+			<choose>
+				<when test="item.createTime == null">now(),</when>
+				<otherwise>#{item.createTime},</otherwise>
+			</choose>

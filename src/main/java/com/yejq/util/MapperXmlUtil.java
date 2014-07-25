@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class MapperXmlUtil {
 
-	private static final String CURRENT_PATH = "D:/workspace/order/biz/src/test/java/com/feifei/order/my/util/";
+	private static final String CURRENT_PATH = "D:/workspace/mybatis-utils/src/main/java/com/yejq/util/";
 	public static final String FILE_INPUT = CURRENT_PATH + "in.txt";
 	public static final String FILE_OUTPUT = CURRENT_PATH + "out.txt";
 

@@ -15,7 +15,7 @@
 
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
 			connectionURL="jdbc:mysql://127.0.0.1:3306/gmsales?generateSimpleParameterMetadata=true"
-			userId="username" password="password">
+			userId="root" password="mysql">
 		</jdbcConnection>
 
 		<javaTypeResolver>
@@ -25,28 +25,27 @@
 		<!-- 路径的包必须事先创建 -->
 		<!-- generate Model -->
 		<javaModelGenerator targetPackage="com.yejq.generator.pojo"
-			targetProject="E:\360\Learn\MyBatis\workspace\My\mybatis-utils\src\main\java">
+			targetProject="D:\workspace\mybatis-utils\src\main\java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<!-- generate xml -->
 		<sqlMapGenerator targetPackage="mapper"
-			targetProject="E:\360\Learn\MyBatis\workspace\My\mybatis-utils\src\main\resources">
+			targetProject="D:\workspace\mybatis-utils\src\main\resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<!-- generate Mapper -->
 		<javaClientGenerator type="XMLMAPPER"
 			targetPackage="com.yejq.generator.mapper"
-			targetProject="E:\360\Learn\MyBatis\workspace\My\mybatis-utils\src\main\java">
+			targetProject="D:\workspace\mybatis-utils\src\main\java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table tableName="audit" domainObjectName="Audit"></table>
 		<table schema="" enableDeleteByPrimaryKey="false"
 			enableDeleteByExample="false" enableCountByExample="false"
 			enableSelectByExample="false" enableUpdateByExample="false"
-			tableName="channel" domainObjectName="Channel"></table>
+			tableName="order_payment_refund" domainObjectName="OrderPaymentRefund"></table>
 	</context>
 </generatorConfiguration>
